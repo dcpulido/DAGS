@@ -4,6 +4,7 @@ public class Empleado {
 	private String escala;
 	private int años;
 	private boolean cargoGestion;
+	public Empleado(){}
 	public Empleado(String nom,String esc,int a,boolean cargo){
 		nombre=nom;
 		escala=esc;
@@ -21,5 +22,10 @@ public class Empleado {
 	}
 	public boolean getCargo(){
 		return cargoGestion;
+	}
+	public String toString(){
+		String toret="";
+		toret="Nombre: "+nombre+"\nEscala: "+escala+"\nAntiguedad: "+años+"\nCargo: "+cargoGestion;
+		return toret;
 	}
 }
