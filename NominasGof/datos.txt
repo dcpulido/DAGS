@@ -1,0 +1,2 @@
+JUAN	A	10	SI
+PEPE	B	25	NO
