@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.util.*;
 
 
 public class Main {
@@ -7,8 +8,12 @@ public class Main {
 			System.out.println("Introducir nombre del archivo");
 		}
 		Reader red=new Reader(args[0]);
-		Empleado[] em=Main.llenarLista(red);
-		System.out.print(em[0].toString());
+		List<Empleado> em=new LinkedList<Empleado>();
+		
+		em.addAll(Main.llenarLista(red));
+		for(Empleado k:em){
+			System.out.print(k.toString()+"\n"+calculaNomina(k)+"\n");
+		}		
 	}
 	public static String[] parser(String in){
 		String[] toret=in.split("\t");
@@ -16,26 +21,22 @@ public class Main {
 	}
 	public static Empleado generaEmpleado(String in){
 		String[] atrib=parser(in);
-		boolean flag;
-		if(atrib[3]=="SI")flag=true;
-		else flag=false;
-		Empleado toret=new Empleado(atrib[0],atrib[1],Integer.parseInt(atrib[2]),flag);
+		Empleado toret=new Empleado(atrib[0],atrib[1],Integer.parseInt(atrib[2]),atrib[3]);
 		return toret;
 	}
-	public static  Empleado[] llenarLista(Reader red){
-		Empleado[] toret = null;
+	public static  List<Empleado> llenarLista(Reader red){
+		List<Empleado> toret = new LinkedList<Empleado>();
 		String med = "";
-		int cont=0;
 		while(med!=null){
 			med = red.getLine();
 			if(med!=null){
-				toret[cont]=generaEmpleado(med);
+				toret.add(generaEmpleado(med));
 			}
 		}
 		red.getFile();
 		return toret;
 	}
-	public int calculaNomina(Empleado e){
+	public static int calculaNomina(Empleado e){
 		String tipo = e.getEscala();
 		Nomina nom=null;
 		switch(tipo){
@@ -53,7 +54,7 @@ public class Main {
 		}
 		return nom.getNomina();
 	}
-	public Nomina cebolla(Nomina tipo,Empleado e){
+	public static Nomina cebolla(Nomina tipo,Empleado e){
 		return new CargoGestion(new Sexenio(new Quinquenio(new Trienio(tipo,e.getAntiguedad()),e.getAntiguedad()),e.getAntiguedad()),e.getCargo());
 	}
 	

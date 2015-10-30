@@ -3,9 +3,9 @@ public class Empleado {
 	private String nombre;
 	private String escala;
 	private int años;
-	private boolean cargoGestion;
+	private String cargoGestion;
 	public Empleado(){}
-	public Empleado(String nom,String esc,int a,boolean cargo){
+	public Empleado(String nom,String esc,int a,String cargo){
 		nombre=nom;
 		escala=esc;
 		años=a;
@@ -20,7 +20,7 @@ public class Empleado {
 	public int getAntiguedad(){
 		return años;
 	}
-	public boolean getCargo(){
+	public String getCargo(){
 		return cargoGestion;
 	}
 	public String toString(){

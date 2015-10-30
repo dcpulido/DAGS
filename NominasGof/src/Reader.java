@@ -15,6 +15,9 @@ public class Reader {
 		return toret;
 	}
 	public String getLine() {
-		return in.nextLine();
+		if(in.hasNextLine()){
+			return in.nextLine();
+		}
+		else return null;
 	}
 }
