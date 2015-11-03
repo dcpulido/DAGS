@@ -1,0 +1,109 @@
+package converterapp;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
+public class ConverterApp {
+	public static void main(String args[]) {
+		System.out.println("input filename: ");
+		ArchivoEntrada entrada = new ArchivoEntrada();
+		System.out.println("output filename: ");
+		ArchivoSalida salida = new ArchivoSalida();
+		String formato=getFormato();
+		transforma(entrada, salida,formato);
+	}
+	public static String getFormato(){
+		return"xml";
+	}
+}
+public class ArchivoEntrada{
+	private File entrada;
+	pivate Scanner in;
+	public ArchivoEntrada(){	
+		@SuppressWarnings("resource")
+		in = new Scanner(System.in);
+		name = in.nextLine();
+		new entrada(name);
+		ExisteEntrada(entrada);
+		in=new Scanner(entrada);
+	}
+	public File getArchivo(){
+		return entrada;
+	}
+	public boolean ExisteEntrada(){
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(input);
+
+		} catch (FileNotFoundException e) {
+			System.err.println("the file " + input.getAbsolutePath()
+					+ " does not exists: " + e.getMessage());
+			System.exit(1);
+		}
+		return true;
+	}
+	public static void getLine(){
+
+	}
+}
+public class ArchivoSalida{
+	private File salida;
+	private int cont;
+	private PrintStream out;
+	public ArchivoSalida(){
+		@SuppressWarnings("resource")
+		in = new Scanner(System.in);
+		name = in.nextLine();
+		new salida(name);
+		ExisteSalida(salida);
+		cont=0;
+		out = new PrintStream(new FileOutputStream(salida));
+	}
+	public boolean ExisteSalida(){
+		PrintStream out = null;
+		try {
+			out = new PrintStream(new FileOutputStream(output));
+		} catch (FileNotFoundException e1) {
+			System.err.println("the file " + input.getAbsolutePath()
+					+ " does cannot be created: " + e1.getMessage());
+			System.exit(1);
+		}
+		return true;
+	}
+	public static void setLine(String line){
+		if(cont==0){
+			out.println("<products>");
+		}
+		String[] tokens = line.split("\t");
+		if (tokens.length != 2) {
+			throw new IllegalArgumentException(
+					"the line does not contain 3 tokens");
+		}
+
+		string xmlString="<product>\n\t<name>" + tokens[0] + "</name>\n\t<price>"
+				+ tokens[1] + "</price>\n</product>";
+
+	}
+	public static void cierra(){
+		out.println("</products>");
+		out.close();
+	}
+} 
+public class Transformacion{
+	private Archivo entrada;
+	private Archivo salida;
+	public Transformacion(Archivo a,Archivo b){
+		entrada=a;
+		salida=b;
+	}
+	public static void tranforma(ArchivoEntrada ent, ArchivoSalida sal,String formato){
+		sal.setFormato(formato);
+		while(toret=!null){
+			String toret =ent.getLine();
+			sal.setLine(toret);
+		}			
+		sal.cierra();
+	}
+}

@@ -1,0 +1,13 @@
+<libros>
+<libro>
+<titulo>que </titulo>
+<autor>hola</autor>
+<isbn>tal</isbn>
+</libro>
+<libro>
+<titulo>da</titulo>
+<autor>soy </autor>
+<isbn>vid</isbn>
+</libro>
+
+</libros>

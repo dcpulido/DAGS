@@ -1,0 +1,18 @@
+<products>
+<product>
+	<name>motherboard</name>
+	<price>100</price>
+</product>
+<product>
+	<name>cpu</name>
+	<price>80</price>
+</product>
+<product>
+	<name>ram memory</name>
+	<price>70</price>
+</product>
+<product>
+	<name>hard disk</name>
+	<price>150</price>
+</product>
+</products>

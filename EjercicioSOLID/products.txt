@@ -1,0 +1,4 @@
+motherboard	100
+cpu	80
+ram memory	70
+hard disk	150
