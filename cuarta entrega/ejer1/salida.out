@@ -1,0 +1,15 @@
+<loggers>
+<log>
+<msg>tipo INFO
+Prioridad 5
+Mensaje inicio 18h 20m 5s 862ms
+</msg>
+</log>
+<log>
+<msg>tipo INFO
+Prioridad 5
+Mensaje Finaliza 18h 20m 5s 862ms
+</msg>
+</log>
+
+</loggers>
