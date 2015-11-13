@@ -15,27 +15,48 @@ class Control implements Observable{
 	private List<Operacion> operaciones;
 	private Reader red;
 	private Writer wrt;
+	private Calendar fecha;
+	private logging msg;
 	public Control(){
+		fecha=Calendar.getInstance();
 		red=new ReaderConsola();
 		wrt=new WriterConsola();
 		operaciones=new ArrayList<Operacion>();
 		Operacion suma=new Suma();
+		Operacion division=new Division();
 		operaciones.add(suma);
+		operaciones.add(division);
 		observers=new ArrayList<Observer>();
 		Observer mon=new Monitoreo();
 		observers.add(mon);
 	}
 	public void Ejecuta(){
-		notifyObservers("inicio");
+		msg=new logger("INFO",5,"inicio "+getHora());
+		notifyObservers(msg.toString());
+
 		Scanner in=new Scanner(System.in);
 		System.out.print(wrt.write(getArgs()));
 		int op=Integer.parseInt(in.next())-1;
+
 		red.readOperandos();
+
 		operaciones.get(op).setOperandos(red.getOp1(),red.getOp2());
 		System.out.println(operaciones.get(op).toString());
-		notifyObservers("ejecucion terminada");
+		
+
+		msg=new logger("INFO",5,"Finaliza "+getHora());
+		notifyObservers(msg.toString());
+
 		toWriteaObservers();
 
+	}
+	private String getHora(){
+		String toNotify="";
+		toNotify+=fecha.get(Calendar.HOUR_OF_DAY)+"h ";
+		toNotify+=fecha.get(Calendar.MINUTE)+"m ";
+		toNotify+=fecha.get(Calendar.SECOND)+"s ";
+		toNotify+=fecha.get(Calendar.MILLISECOND)+"ms";
+		return toNotify;
 	}
 	public void addObserver(Observer ob){
 		observers.add(ob);
@@ -151,7 +172,7 @@ class WriterMonitoreo implements Writer{
 ///interfaces
 interface Operacion{
 	public void setOperandos(int a,int b);
-	public int opera();
+	public float opera();
 	public String toString();
 	public String getNombre();
 }
@@ -171,7 +192,7 @@ class Suma implements Operacion{
 		op1=a;
 		op2=b;
 	}
-	public int opera(){
+	public float opera(){
 		return op1+op2;
 	}
 	public String toString(){
@@ -181,4 +202,108 @@ class Suma implements Operacion{
 		return "suma";
 	}
 }
-
+class Division implements Operacion{
+	private int op1;
+	private int op2;
+	public Division(){
+		op1=0;
+		op2=1;
+	}
+	public Division(int a,int b){
+		op1=a;
+		if(b==0)b=1;
+		op2=b;
+	}
+	public void setOperandos(int a,int b){
+		op1=a;
+		if(b==0)b=1;
+		op2=b;
+	}
+	public float opera(){
+		return op1/op2;
+	}
+	public String toString(){
+		return "divide: "+ String.valueOf(opera());
+	}
+	public String getNombre(){
+		return "divide";
+	}
+}
+///LOGGING
+///interfgace
+interface logging{
+	public int getPriority();
+	public void setPriority(int prioridad);
+	public String getType();
+	public void setType(String tipo);
+	public String getMessage();
+	public void setMessage(String mensaje);
+	public String toString();
+}
+///Implementaciones
+class logger implements logging{
+	private int prio;
+	private String mess;
+	private String tipo;
+	public logger(String tipo,int prioridad,String mensaje){
+		this.tipo=tipo;
+		setPriority(prioridad);
+		mess=mensaje;	
+	}
+	public int getPriority(){
+		return prio;
+	}
+	public void setPriority(int prioridad){
+		if(tipo=="INFO"){
+			if(prioridad>7){
+				prioridad = 7;
+				prio=prioridad;
+			}
+			else{
+				if(prioridad<4){
+					prioridad = 4;
+					prio=prioridad;
+				}
+				else prio=prioridad;
+			}
+		}
+		if(tipo=="DEBUG"){
+			if(prioridad>3){
+				prioridad = 3;
+				prio=prioridad;
+			}
+			else{
+				prio=prioridad;
+			}
+		}
+		if(tipo=="ERROR"){
+			if(prioridad<8){
+				prioridad = 8;
+				prio=prioridad;
+			}
+			else{
+				prio=prioridad;
+			}
+		}
+		
+	}
+	public String getType(){
+		return tipo;
+	}
+	public void setType(String tipo){
+		this.tipo=tipo;
+		setPriority(prio);
+	}
+	public String getMessage(){
+		return mess;
+	}
+	public void setMessage(String mensaje){
+		mess=mensaje;
+	}
+	public String toString(){
+		String toret="tipo "+ tipo+"\n";
+		toret+="Prioridad "+ prio+"\n";
+		toret+="Mensaje "+ mess+"\n";
+		return toret;
+	}
+}
