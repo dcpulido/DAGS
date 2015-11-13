@@ -1,11 +1,12 @@
 import java.util.*;
+import java.io.*;
 //Entrega 4 de DAGGS 
 ///David Coello Pulido
 ///Daniel Rodriguez Cacheiro
 
 ///MAIN
-class Framework{
-	public static void main(String [] args){
+class Framework {
+	public static void main(String [] args)throws FileNotFoundException{
 		Control ejecuta=new Control();
 		ejecuta.Ejecuta();
 	}
@@ -15,12 +16,14 @@ class Control implements Observable{
 	private List<Operacion> operaciones;
 	private Reader red;
 	private Writer wrt;
+	private Writer wrtXml;
 	private Calendar fecha;
 	private logging msg;
-	public Control(){
+	public Control()throws FileNotFoundException{
 		fecha=Calendar.getInstance();
 		red=new ReaderConsola();
 		wrt=new WriterConsola();
+
 		operaciones=new ArrayList<Operacion>();
 		Operacion suma=new Suma();
 		Operacion division=new Division();
@@ -29,11 +32,14 @@ class Control implements Observable{
 		observers=new ArrayList<Observer>();
 		Observer mon=new Monitoreo();
 		observers.add(mon);
+
 	}
-	public void Ejecuta(){
+	public void Ejecuta()throws FileNotFoundException{
+		List<String> recoMsgs=new ArrayList<String>();
 		msg=new logger("INFO",5,"inicio "+getHora());
 		notifyObservers(msg.toString());
-
+		recoMsgs.add(msg.toString());
+		
 		Scanner in=new Scanner(System.in);
 		System.out.print(wrt.write(getArgs()));
 		int op=Integer.parseInt(in.next())-1;
@@ -46,9 +52,10 @@ class Control implements Observable{
 
 		msg=new logger("INFO",5,"Finaliza "+getHora());
 		notifyObservers(msg.toString());
-
+		recoMsgs.add(msg.toString());
+		wrtXml=new WriterArchivoXml("salida");
+		wrtXml.write(recoMsgs);
 		toWriteaObservers();
-
 	}
 	private String getHora(){
 		String toNotify="";
@@ -166,6 +173,34 @@ class WriterMonitoreo implements Writer{
 		}
 		System.out.println(toret);
 		return toret;
+	}
+}
+class WriterArchivoXml implements Writer{
+	private PrintStream out;
+	private File f;
+	private int cont;
+	public WriterArchivoXml(String name) throws FileNotFoundException{
+		f=new File(name+".out");
+		out=new PrintStream(f.getName());
+		cont=0;
+	}
+	public String write(List<String> args){
+		for(String st:args){
+			parse(st);
+		}
+		close();
+		return "archivo guardado";
+	}
+	private void parse(String str){
+		if (cont==0){
+			out.println("<loggers>");
+			cont++;
+		}
+		out.println("<log>\n<msg>"+str+"</msg>\n</log>");
+	}
+	private void close(){
+		out.println("\n</loggers>");
+		out.close();
 	}
 }
 ////OPERACIONES
